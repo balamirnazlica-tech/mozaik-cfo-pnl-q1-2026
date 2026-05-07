@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
+<title>Mozaik Design — P&L 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f5f5f7; --surface: #ffffff; --surface-2: #fbfbfd;
+    --text: #1d1d1f; --text-secondary: #6e6e73; --text-tertiary: #86868b;
+    --divider: #d2d2d7; --divider-soft: #e8e8ed;
+    --accent: #0071e3; --accent-soft: rgba(0, 113, 227, 0.08);
+    --pos: #00875a; --neg: #d70015; --amber: #b25000;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+    --radius-lg: 18px; --radius-md: 12px; --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Inter, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: "ss01", "cv11", "tnum"; letter-spacing: -0.01em; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 0.5px solid var(--divider); }
+  h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.025em; margin: 0 0 4px; color: var(--text); }
+  .subtitle { color: var(--text-secondary); font-size: 15px; margin: 0; }
+  .ccy-toggle { display: inline-flex; background: var(--surface); border: 0.5px solid var(--divider); border-radius: 999px; padding: 3px; box-shadow: var(--shadow-sm); }
+  .ccy-btn { border: 0; background: transparent; padding: 6px 14px; font-size: 13px; font-weight: 500; color: var(--text-secondary); border-radius: 999px; cursor: pointer; transition: all 0.18s ease; font-family: inherit; }
+  .ccy-btn.active { background: var(--text); color: white; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+  @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--surface); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); }
+  .kpi-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); margin-bottom: 10px; }
+  .kpi-value { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .kpi-meta { margin-top: 6px; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .kpi-value.pos { color: var(--pos); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; background: var(--surface); padding: 4px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 24px; width: fit-content; }
+  .tab { border: 0; background: transparent; padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--text-secondary); border-radius: 8px; cursor: pointer; transition: all 0.18s ease; font-family: inherit; }
+  .tab:hover { background: var(--accent-soft); color: var(--text); }
+  .tab.active { background: var(--text); color: white; }
+  .card { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+  .card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 16px; letter-spacing: -0.01em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-3-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  @media (max-width: 900px) { .grid-3-2 { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+  thead th { text-align: left; font-weight: 500; color: var(--text-tertiary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 12px 12px; border-bottom: 0.5px solid var(--divider); }
+  thead th.right { text-align: right; }
+  tbody td { padding: 10px 12px; border-bottom: 0.5px solid var(--divider-soft); }
+  tbody td.right { text-align: right; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: var(--surface-2); }
+  tfoot td { padding: 12px; font-weight: 600; border-top: 0.5px solid var(--divider); color: var(--text); }
+  tfoot td.right { text-align: right; }
+  .muted { color: var(--text-secondary); }
+  .pos { color: var(--pos); }
+  .neg { color: var(--neg); }
+  .row-highlight { background: var(--surface-2); }
+  .row-highlight td { font-weight: 600; }
+  .ytd-divider { border-left: 0.5px solid var(--divider); }
+  .legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 6px 0; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: middle; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 999px; }
+  .pill-blue { background: var(--accent-soft); color: var(--accent); }
+  .pill-green { background: rgba(0, 135, 90, 0.1); color: var(--pos); }
+  .pill-red { background: rgba(215, 0, 21, 0.08); color: var(--neg); }
+  .pill-amber { background: rgba(178, 80, 0, 0.1); color: var(--amber); }
+  .headline { font-size: 19px; line-height: 1.5; color: var(--text); font-weight: 400; letter-spacing: -0.01em; margin: 12px 0 0; }
+  .commentary-list { list-style: none; padding: 0; margin: 12px 0 0; }
+  .commentary-list li { padding: 12px 0; border-bottom: 0.5px solid var(--divider-soft); font-size: 14px; line-height: 1.55; color: var(--text); }
+  .commentary-list li:last-child { border-bottom: 0; }
+  .commentary-list li strong { color: var(--text); font-weight: 600; }
+  .action-list { counter-reset: action; list-style: none; padding: 0; margin: 12px 0 0; }
+  .action-list li { counter-increment: action; position: relative; padding: 14px 0 14px 36px; border-bottom: 0.5px solid var(--divider-soft); font-size: 14px; line-height: 1.55; }
+  .action-list li:last-child { border-bottom: 0; }
+  .action-list li::before { content: counter(action); position: absolute; left: 0; top: 14px; width: 24px; height: 24px; background: var(--text); color: white; border-radius: 50%; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  footer { margin-top: 48px; padding-top: 24px; border-top: 0.5px solid var(--divider); color: var(--text-tertiary); font-size: 12px; text-align: center; }
+  footer code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--text-secondary); }
+  .hidden { display: none !important; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @media (max-width: 600px) { .container { padding: 20px 14px 48px; } h1 { font-size: 24px; } .subtitle { font-size: 13px; } header { margin-bottom: 24px; padding-bottom: 16px; } .kpi-grid { gap: 8px; margin-bottom: 24px; } .kpi { padding: 14px; border-radius: 14px; } .kpi-label { font-size: 10px; margin-bottom: 6px; } .kpi-value { font-size: 18px; } .kpi-meta { font-size: 11px; } .tabs { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; } .tab { white-space: nowrap; padding: 8px 12px; font-size: 12px; } .card { padding: 16px; border-radius: 14px; margin-bottom: 12px; } .card h3 { font-size: 14px; margin-bottom: 12px; } .grid-2, .grid-3-2 { gap: 12px; margin-bottom: 12px; } table { font-size: 12px; } thead th { padding: 6px 8px 10px; font-size: 10px; } tbody td { padding: 8px 8px; } tfoot td { padding: 10px 8px; font-size: 12px; } .headline { font-size: 16px; } .commentary-list li { font-size: 13px; padding: 10px 0; } .action-list li { font-size: 13px; padding: 12px 0 12px 32px; } .action-list li::before { width: 22px; height: 22px; font-size: 10px; top: 12px; } footer { font-size: 11px; line-height: 1.6; word-break: break-word; } footer code { font-size: 10px; word-break: break-all; } }
+  @media (max-width: 380px) { h1 { font-size: 22px; } .kpi-grid { grid-template-columns: 1fr 1fr; gap: 6px; } .kpi { padding: 12px; } .kpi-value { font-size: 16px; } .ccy-toggle { font-size: 12px; } }
+  @media (min-width: 601px) and (max-width: 900px) { .kpi-value { font-size: 20px; } h1 { font-size: 28px; } }
+  @media (prefers-color-scheme: dark) { :root { --bg: #000000; --surface: #1c1c1e; --surface-2: #2c2c2e; --text: #f5f5f7; --text-secondary: #a1a1a6; --text-tertiary: #6e6e73; --divider: #38383a; --divider-soft: #2c2c2e; --accent: #0a84ff; --accent-soft: rgba(10, 132, 255, 0.15); --pos: #30d158; --neg: #ff453a; --amber: #ff9f0a; --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.06); --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.06); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Mozaik Design — P&L</h1>
+      <p class="subtitle">Q1 2026 · Ocak–Mart · Finansal Özet · CFO View</p>
+    </div>
+    <div class="ccy-toggle" role="group">
+      <button id="ccy-tl" class="ccy-btn active">₺ TL</button>
+      <button id="ccy-eu" class="ccy-btn">€ EUR</button>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Toplam Gelir</div><div class="kpi-value" id="kpi-rev">—</div><div class="kpi-meta">SATIŞ · Q1</div></div>
+    <div class="kpi"><div class="kpi-label">Brüt Kâr</div><div class="kpi-value" id="kpi-gp">—</div><div class="kpi-meta"><span id="kpi-gpm">—</span> brüt marj</div></div>
+    <div class="kpi"><div class="kpi-label">Net Kâr</div><div class="kpi-value pos" id="kpi-np">—</div><div class="kpi-meta"><span id="kpi-npm">—</span> net marj</div></div>
+    <div class="kpi"><div class="kpi-label">Op. Gider</div><div class="kpi-value" id="kpi-opex">—</div><div class="kpi-meta"><span id="kpi-opexratio">—</span> gelirin</div></div>
+    <div class="kpi"><div class="kpi-label">SMM (COGS)</div><div class="kpi-value" id="kpi-cogs">—</div><div class="kpi-meta"><span id="kpi-cogsratio">—</span> gelirin</div></div>
+  </section>
+
+  <nav class="tabs">
+    <button data-tab="overview" class="tab active">Genel Bakış</button>
+    <button data-tab="pnl" class="tab">P&L Detay</button>
+    <button data-tab="opex" class="tab">Gider Kırılımı</button>
+    <button data-tab="margins" class="tab">Marjlar</button>
+    <button data-tab="cfo" class="tab">CFO Yorumu</button>
+  </nav>
+
+  <section id="tab-overview" class="tab-pane">
+    <div class="grid-2">
+      <div class="card"><h3>Aylık Gelir vs. Net Kâr</h3><canvas id="ch-revprofit" height="200"></canvas></div>
+      <div class="card"><h3>Maliyet Yapısı</h3><canvas id="ch-coststack" height="200"></canvas></div>
+    </div>
+    <div class="grid-3-2">
+      <div class="card"><h3>Aylık Performans</h3><div style="overflow-x:auto"><table><thead><tr><th>Ay</th><th class="right">Gelir</th><th class="right">SMM</th><th class="right">Brüt Kâr</th><th class="right">Gider</th><th class="right">Net Kâr</th><th class="right">Net Marj</th></tr></thead><tbody id="overview-rows"></tbody><tfoot id="overview-foot"></tfoot></table></div></div>
+      <div class="card"><h3>Gider Payları (Q1)</h3><canvas id="ch-opexdonut" height="200"></canvas><div id="opex-legend" style="margin-top:16px"></div></div>
+    </div>
+  </section>
+
+  <section id="tab-pnl" class="tab-pane hidden">
+    <div class="card"><h3>P&L Tablosu — Aylık + YTD</h3><div style="overflow-x:auto"><table><thead><tr><th>Kalem</th><th class="right">Ocak</th><th class="right">Şubat</th><th class="right">Mart</th><th class="right ytd-divider">Q1 Toplam</th><th class="right">% Gelir</th></tr></thead><tbody id="pnl-rows"></tbody></table></div></div>
+  </section>
+
+  <section id="tab-opex" class="tab-pane hidden">
+    <div class="grid-2">
+      <div class="card"><h3>Gider Kalemleri (Aylık)</h3><canvas id="ch-opexbar" height="220"></canvas></div>
+      <div class="card"><h3>Gider Trendi</h3><canvas id="ch-opextrend" height="220"></canvas></div>
+    </div>
+    <div class="card"><h3>Detaylı Gider Tablosu</h3><div style="overflow-x:auto"><table><thead><tr><th>Kategori</th><th class="right">Ocak</th><th class="right">Şubat</th><th class="right">Mart</th><th class="right">Q1 Toplam</th><th class="right">% Gider</th><th class="right">% Gelir</th></tr></thead><tbody id="opex-rows"></tbody><tfoot id="opex-foot"></tfoot></table></div></div>
+  </section>
+
+  <section id="tab-margins" class="tab-pane hidden">
+    <div class="grid-2">
+      <div class="card"><h3>Marj Trendi (%)</h3><canvas id="ch-margin" height="220"></canvas></div>
+      <div class="card"><h3>Maliyet Oranları (% Gelir)</h3><canvas id="ch-costratio" height="220"></canvas></div>
+    </div>
+    <div class="card"><h3>Marj & Oran Tablosu</h3><div style="overflow-x:auto"><table><thead><tr><th>Metrik</th><th class="right">Ocak</th><th class="right">Şubat</th><th class="right">Mart</th><th class="right">Q1</th><th>Yorum</th></tr></thead><tbody id="margin-rows"></tbody></table></div></div>
+  </section>
+  <section id="tab-cfo" class="tab-pane hidden">
+    <div class="card">
+      <span class="pill pill-blue">CFO Headline</span>
+      <p class="headline">
+        Mozaik Q1’i <strong style="color:var(--pos)">₺78,8M net kâr</strong> ile kapattı (gelirin <strong>%23,4’ü</strong>).
+        Brüt marj %47’den <strong style="color:var(--pos)">%53,6’ya</strong> tırmanırken, net marj Şubat’ta
+        <strong style="color:var(--neg)">%18’e geriledi</strong> — bu sapma bilançonun en görünür sinyali.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <span class="pill pill-green">İyi Giden</span>
+        <ul class="commentary-list">
+          <li><strong>Brüt marj genişliyor.</strong> Ocak %47,2 → Mart %53,6. SMM/Gelir 6,4 puan iyileşti — fiyatlama ya da ürün karması doğru yönde.</li>
+          <li><strong>Mart en yüksek brüt marj.</strong> %53,6 ile Q1’in zirvesi — fiyatlama/karma disiplini tutuyor. Net kâr büyüklüğünde Ocak hâlâ önde: ₺33,4M vs Mart ₺28,8M (Mart’ta gider %12 daha yüksek).</li>
+          <li><strong>Danışmanlık disipline alındı.</strong> Ocak ₺5,3M → Mart ₺2,7M (−49%). Mart hızı Q2 boyunca sürerse Q1’e göre ~₺4,3M tasarruf (Q1 toplam ₺12,4M → Q2 ~₺8,1M).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="pill pill-red">Kırmızı Bayrak</span>
+        <ul class="commentary-list">
+          <li><strong>Şubat çukur ay.</strong> Gelir Ocak’a göre <span class="neg">−31%</span> (₺131M → ₺90M); aynı dönemde gider sabit kaldığı için net marj 7 puan düştü. Mevsimsellik mi, ihracat sipariş kayması mı? Sebep belirlenmeli.</li>
+          <li><strong>Kira Mart’ta sıçradı.</strong> Şubat ₺3,03M → Mart ₺3,79M (+25%). Tek seferlik mi, yoksa yeni baz mı? Şubat’a göre Q2’de yıllık <strong>+₺9M</strong>’lik kalıcı yük demek.</li>
+          <li><strong>Gider/Gelir oranı sallantılı.</strong> Ocak %21,9 → Şubat %32,5 → Mart %28,3. Ölçek kayıp aylarında gider esnekliği yok; ciro %30 düştüğünde gider %30 kısılamıyor.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="pill pill-amber">Varyans — Açıklaması Aranıyor</span>
+      <ul class="commentary-list">
+        <li><strong>Şubat geliri −31%</strong> — siparişler mi kaydı, fiyatlama mı düştü, müşteri konsantrasyonu mu? Faturabazlı tabloda en büyük 5 müşteriyi karşılaştırmalı görmek lazım.</li>
+        <li><strong>"Diğerleri" kalemi Mart’ta +52%</strong> (₺7M → ₺10,6M). En büyük kalem: Nakliye/Hammaliye Mart’ta ₺1,07M, Bilgi İşlem ₺0,92M, Temsil/İkram ₺758K — bu üçü ayrı satıra çıkarılmalı.</li>
+        <li><strong>Bilgi İşlem Hizmet Gideri</strong> Ocak ₺99K → Şubat ₺576K → Mart ₺920K. Tek seferlik proje mi, abonelik mi? Q2 baz beklentisi netleştirilmeli.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="pill pill-blue">Aksiyon Listesi</span>
+      <ol class="action-list">
+        <li><strong>Şubat zayıflığını kapat:</strong> Top-5 müşteri analizi + sipariş takvimi karşılaştırması. Hedef: yıllık ortalama gelirin altında ay sayısını ≤ 1’e çekmek (mevcut: 1).</li>
+        <li><strong>Danışmanlık tavanı koy:</strong> Q2’de aylık ₺2,5M tavan. Q1 ortalaması (₺4,1M) ile karşılaştırınca yıllıklandırılmış potansiyel tasarruf <span class="pos">~₺19,6M</span>; Mart hızıyla (₺2,7M) karşılaştırınca ek tasarruf ~₺2,4M. Tavan, disiplini sabitler.</li>
+        <li><strong>Kira artışını yıllığa yaz:</strong> Mart’taki +₺757K MoM kalıcı mı? Eğer evet, +₺9,1M yıllık OpEx (₺757K × 12). Q1 run-rate’ine göre 2026 OpEx ~₺362M; kira kalıcı olursa ~₺371M; net marja ≈ −0,7 puan etki.</li>
+        <li><strong>Bilgi İşlem’i abonelik vs. proje olarak ayır:</strong> ₺1,6M Q1 toplamından sürekli olan ne, tek seferlik ne? Q2 forecastında baz değişir.</li>
+        <li><strong>Nisan kapanışı:</strong> Faturabazlı dosyada NİSAN sekmesi henüz boş. 10 Mayıs’a kadar tamamlanması bu dashboard’un Nisan dilimini açar.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    Kaynak: <code>(2026)mozaikFATURABAZLIKARZARARRAPORU (7).xlsx</code> · İCMAL RAPOR &nbsp;·&nbsp; <code>(2026)MOZAİK-KARŞILAŞTIRMALIGİDERTABLOSU (6).xlsx</code> · KARŞILAŞTIRMALI &nbsp;·&nbsp; 7 Mayıs 2026
+  </footer>
+</div>
+
+<script>
+const months = ['Ocak','Şubat','Mart'];
+const fx = [50.95, 51.78, 51.20];
+const data = {
+  revenue: [131774842.01, 90416993.27, 114200023.84],
+  cogs:    [ 69512780.90, 44489694.17,  53002996.35],
+  opex:    [ 28885862.80, 29357321.30,  32372196.09],
+  netProfit:[33376198.31, 16569977.80,  28824831.40]
+};
+data.grossProfit = data.revenue.map((r,i)=> r - data.cogs[i]);
+const ytd = arr => arr.reduce((a,b)=>a+b,0);
+const Q1 = { revenue: ytd(data.revenue), cogs: ytd(data.cogs), opex: ytd(data.opex), grossProfit: ytd(data.grossProfit), netProfit: ytd(data.netProfit) };
+const opex = [
+  { name:'Ücret',        color:'#0071e3', vals:[11132465.89, 11464907.63, 12284096.29] },
+  { name:'Diğerleri',    color:'#86868b', vals:[ 5897933.57,  6980568.62, 10632865.47] },
+  { name:'Danışmanlık',  color:'#d70015', vals:[ 5289523.13,  4416938.30,  2704114.92] },
+  { name:'Banka',        color:'#5e5ce6', vals:[ 3824440.19,  3465906.75,  2964619.41] },
+  { name:'Kira',         color:'#00875a', vals:[ 2741500.00,  3029000.00,  3786500.00] },
+];
+opex.forEach(b=> b.total = ytd(b.vals));
+const opexQ1 = ytd(opex.map(b=>b.total));
+let ccy = 'TL';
+const fmtTL = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n);
+const fmtEU = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+const fmtPct = n => (n*100).toLocaleString('tr-TR',{maximumFractionDigits:1}) + '%';
+const fmt = (n, monthIdx=null, asArrayForYTD=null) => {
+  if (ccy === 'TL') return fmtTL(n);
+  if (monthIdx === null && asArrayForYTD) return fmtEU(asArrayForYTD.reduce((acc,v,i)=> acc + v/fx[i], 0));
+  return fmtEU(monthIdx===null ? n : n/fx[monthIdx]);
+};
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x=> x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p=> p.classList.add('hidden'));
+  document.getElementById('tab-'+b.dataset.tab).classList.remove('hidden');
+  rerender();
+}));
+document.getElementById('ccy-tl').addEventListener('click', () => { ccy='TL'; setCcyButtons(); rerender(); });
+document.getElementById('ccy-eu').addEventListener('click', () => { ccy='EU'; setCcyButtons(); rerender(); });
+function setCcyButtons() {
+  document.getElementById('ccy-tl').classList.toggle('active', ccy==='TL');
+  document.getElementById('ccy-eu').classList.toggle('active', ccy==='EU');
+}
+let charts = {};
+function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+function getChartColors() {
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return {
+    grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+    tick: isDark ? '#a1a1a6' : '#86868b',
+    text: isDark ? '#f5f5f7' : '#1d1d1f',
+    bg: isDark ? '#1c1c1e' : '#ffffff',
+    border: isDark ? '#38383a' : '#d2d2d7'
+  };
+}
+function rerender() {
+  const c = getChartColors();
+  const tooltip = { backgroundColor: c.bg, titleColor: c.text, bodyColor: c.text, borderColor: c.border, borderWidth: 0.5, padding: 10, cornerRadius: 8, titleFont: { family: '-apple-system, BlinkMacSystemFont, sans-serif', weight: '600' }, bodyFont: { family: '-apple-system, BlinkMacSystemFont, sans-serif' }, boxPadding: 4 };
+  const axisFont = { family: '-apple-system, BlinkMacSystemFont, sans-serif', size: 11 };
+  const grid = { color: c.grid, drawBorder: false };
+  const tick = { color: c.tick, font: axisFont };
+  document.getElementById('kpi-rev').textContent  = fmt(Q1.revenue, null, data.revenue);
+  document.getElementById('kpi-gp').textContent   = fmt(Q1.grossProfit, null, data.grossProfit);
+  document.getElementById('kpi-gpm').textContent  = fmtPct(Q1.grossProfit/Q1.revenue);
+  document.getElementById('kpi-np').textContent   = fmt(Q1.netProfit, null, data.netProfit);
+  document.getElementById('kpi-npm').textContent  = fmtPct(Q1.netProfit/Q1.revenue);
+  document.getElementById('kpi-opex').textContent = fmt(Q1.opex, null, data.opex);
+  document.getElementById('kpi-opexratio').textContent = fmtPct(Q1.opex/Q1.revenue);
+  document.getElementById('kpi-cogs').textContent = fmt(Q1.cogs, null, data.cogs);
+  document.getElementById('kpi-cogsratio').textContent = fmtPct(Q1.cogs/Q1.revenue);
+  const ov = document.getElementById('overview-rows');
+  ov.innerHTML = months.map((m,i) => {
+    const gp = data.grossProfit[i], np = data.netProfit[i];
+    const npm = np/data.revenue[i];
+    const cls = np>=0 ? 'pos' : 'neg';
+    return `<tr>
+      <td>${m} 2026</td>
+      <td class="right">${fmt(data.revenue[i], i)}</td>
+      <td class="right muted">${fmt(data.cogs[i], i)}</td>
+      <td class="right">${fmt(gp, i)}</td>
+      <td class="right muted">${fmt(data.opex[i], i)}</td>
+      <td class="right ${cls}" style="font-weight:600">${fmt(np, i)}</td>
+      <td class="right ${cls}">${fmtPct(npm)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('overview-foot').innerHTML = `<tr>
+    <td>Q1 Toplam</td>
+    <td class="right">${fmt(Q1.revenue,null,data.revenue)}</td>
+    <td class="right muted">${fmt(Q1.cogs,null,data.cogs)}</td>
+    <td class="right">${fmt(Q1.grossProfit,null,data.grossProfit)}</td>
+    <td class="right muted">${fmt(Q1.opex,null,data.opex)}</td>
+    <td class="right pos">${fmt(Q1.netProfit,null,data.netProfit)}</td>
+    <td class="right pos">${fmtPct(Q1.netProfit/Q1.revenue)}</td>
+  </tr>`;
+  const pnlRows = [
+    {label:'Gelir (SATIŞ)', vals:data.revenue, bold:true},
+    {label:'  − SMM (COGS)', vals:data.cogs, muted:true},
+    {label:'= Brüt Kâr', vals:data.grossProfit, bold:true, hl:true},
+    {label:'  − Operasyonel Gider', vals:data.opex, muted:true},
+    ...opex.map(b => ({label:'      • '+b.name, vals:b.vals, muted:true})),
+    {label:'= Net Kâr', vals:data.netProfit, bold:true, hl:true, accent:'pos'},
+  ];
+  document.getElementById('pnl-rows').innerHTML = pnlRows.map(r => {
+    const total = ytd(r.vals);
+    const bold = r.bold ? 'style="font-weight:600"' : '';
+    const muted = r.muted ? 'muted' : '';
+    const hl = r.hl ? 'row-highlight' : '';
+    const accent = r.accent || '';
+    const pctRev = total/Q1.revenue;
+    return `<tr class="${hl}">
+      <td ${bold} class="${accent}">${r.label}</td>
+      <td class="right ${muted}">${fmt(r.vals[0],0)}</td>
+      <td class="right ${muted}">${fmt(r.vals[1],1)}</td>
+      <td class="right ${muted}">${fmt(r.vals[2],2)}</td>
+      <td class="right ytd-divider ${accent}" ${bold}>${fmt(total,null,r.vals)}</td>
+      <td class="right ${muted}">${fmtPct(pctRev)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('opex-rows').innerHTML = opex.map(b => `
+    <tr>
+      <td style="border-left:3px solid ${b.color}; padding-left:12px; font-weight:500">${b.name}</td>
+      <td class="right">${fmt(b.vals[0],0)}</td>
+      <td class="right">${fmt(b.vals[1],1)}</td>
+      <td class="right">${fmt(b.vals[2],2)}</td>
+      <td class="right" style="font-weight:600">${fmt(b.total,null,b.vals)}</td>
+      <td class="right muted">${fmtPct(b.total/opexQ1)}</td>
+      <td class="right muted">${fmtPct(b.total/Q1.revenue)}</td>
+    </tr>`).join('');
+  document.getElementById('opex-foot').innerHTML = `<tr>
+    <td>Toplam Gider</td>
+    <td class="right">${fmt(data.opex[0],0)}</td>
+    <td class="right">${fmt(data.opex[1],1)}</td>
+    <td class="right">${fmt(data.opex[2],2)}</td>
+    <td class="right">${fmt(Q1.opex,null,data.opex)}</td>
+    <td class="right">100%</td>
+    <td class="right">${fmtPct(Q1.opex/Q1.revenue)}</td>
+  </tr>`;
+  const grossMargin = data.grossProfit.map((g,i) => g/data.revenue[i]);
+  const netMargin = data.netProfit.map((n,i) => n/data.revenue[i]);
+  const opexRatio = data.opex.map((o,i) => o/data.revenue[i]);
+  const cogsRatio = data.cogs.map((c,i) => c/data.revenue[i]);
+  document.getElementById('margin-rows').innerHTML = [
+    {label:'Brüt Marj', vals:grossMargin, ytd:Q1.grossProfit/Q1.revenue, comment:'Mart en yüksek (%53,6) — fiyatlama lehte'},
+    {label:'Net Marj',  vals:netMargin,  ytd:Q1.netProfit/Q1.revenue, comment:'Şubat çukur ay (%18,3) — sebep aranıyor'},
+    {label:'SMM / Gelir', vals:cogsRatio, ytd:Q1.cogs/Q1.revenue, comment:'%52,8 → %46,4 iyileşiyor'},
+    {label:'Gider / Gelir', vals:opexRatio, ytd:Q1.opex/Q1.revenue, comment:'%21,9 → %32,5 sıçraması; gider esnekliği zayıf'},
+  ].map(r => `<tr>
+    <td style="font-weight:500">${r.label}</td>
+    <td class="right">${fmtPct(r.vals[0])}</td>
+    <td class="right">${fmtPct(r.vals[1])}</td>
+    <td class="right">${fmtPct(r.vals[2])}</td>
+    <td class="right" style="font-weight:600">${fmtPct(r.ytd)}</td>
+    <td class="muted" style="font-size:13px">${r.comment}</td>
+  </tr>`).join('');
+  destroyCharts();
+  const yMoney = { grid, ticks: {...tick, callback:v=> ccy==='TL'? '₺'+(v/1e6).toFixed(0)+'M' : '€'+(v/1e6).toFixed(1)+'M' }, border:{display:false} };
+  const xCat = { grid:{display:false}, ticks: tick, border:{display:false} };
+  const legend = { labels: { color: c.text, font: axisFont, usePointStyle: true, pointStyle: 'circle', boxWidth: 8 } };
+  charts.revprofit = new Chart(document.getElementById('ch-revprofit'), {
+    type:'bar',
+    data:{ labels:months, datasets:[
+      { label:'Gelir', data:data.revenue.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:'#0071e3', borderRadius:6, barPercentage:0.65 },
+      { label:'Net Kâr', data:data.netProfit.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:'#00875a', borderRadius:6, barPercentage:0.65 },
+    ]},
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:xCat, y:yMoney }}
+  });
+  charts.coststack = new Chart(document.getElementById('ch-coststack'), {
+    type:'bar',
+    data:{ labels:months, datasets:[
+      { label:'SMM', data:data.cogs.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:'#d70015', stack:'s' },
+      { label:'Gider', data:data.opex.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:'#86868b', stack:'s' },
+      { label:'Net Kâr', data:data.netProfit.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:'#00875a', stack:'s', borderRadius:6 },
+    ]},
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:{...xCat, stacked:true}, y:{...yMoney, stacked:true} }}
+  });
+  charts.opexdonut = new Chart(document.getElementById('ch-opexdonut'), {
+    type:'doughnut',
+    data:{ labels:opex.map(b=>b.name), datasets:[{ data:opex.map(b=>b.total), backgroundColor:opex.map(b=>b.color), borderColor:c.bg, borderWidth:2 }]},
+    options:{ responsive:true, plugins:{legend:{display:false}, tooltip:{...tooltip, callbacks:{ label:ctx=> ctx.label+': '+fmtTL(ctx.parsed)+' ('+fmtPct(ctx.parsed/opexQ1)+')' }}}, cutout:'70%' }
+  });
+  document.getElementById('opex-legend').innerHTML = opex.map(b => `
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:${b.color}"></span>${b.name}</span>
+      <span>${fmtPct(b.total/opexQ1)}</span>
+    </div>`).join('');
+  charts.opexbar = new Chart(document.getElementById('ch-opexbar'), {
+    type:'bar',
+    data:{ labels:months, datasets: opex.map(b => ({ label:b.name, data:b.vals.map((v,i)=> ccy==='TL'? v : v/fx[i]), backgroundColor:b.color, stack:'op' })) },
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:{...xCat, stacked:true}, y:{...yMoney, stacked:true} }}
+  });
+  charts.opextrend = new Chart(document.getElementById('ch-opextrend'), {
+    type:'line',
+    data:{ labels:months, datasets: opex.map(b => ({ label:b.name, data:b.vals.map((v,i)=> ccy==='TL'? v : v/fx[i]), borderColor:b.color, backgroundColor:b.color, tension:0.4, pointRadius:4, borderWidth:2, fill:false })) },
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:xCat, y:yMoney }}
+  });
+  charts.margin = new Chart(document.getElementById('ch-margin'), {
+    type:'line',
+    data:{ labels:months, datasets:[
+      { label:'Brüt Marj', data:grossMargin.map(v=>v*100), borderColor:'#00875a', backgroundColor:'rgba(0,135,90,0.1)', tension:0.4, pointRadius:5, borderWidth:2, fill:true },
+      { label:'Net Marj', data:netMargin.map(v=>v*100), borderColor:'#0071e3', backgroundColor:'rgba(0,113,227,0.08)', tension:0.4, pointRadius:5, borderWidth:2, fill:true },
+    ]},
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:xCat, y:{ grid, ticks:{...tick, callback:v=>v.toFixed(0)+'%'}, border:{display:false} }}}
+  });
+  charts.costratio = new Chart(document.getElementById('ch-costratio'), {
+    type:'bar',
+    data:{ labels:months, datasets:[
+      { label:'SMM/Gelir', data:cogsRatio.map(v=>v*100), backgroundColor:'#d70015', borderRadius:6, barPercentage:0.65 },
+      { label:'Gider/Gelir', data:opexRatio.map(v=>v*100), backgroundColor:'#86868b', borderRadius:6, barPercentage:0.65 },
+    ]},
+    options:{ responsive:true, plugins:{legend, tooltip}, scales:{ x:xCat, y:{ grid, ticks:{...tick, callback:v=>v.toFixed(0)+'%'}, border:{display:false} }}}
+  });
+}
+rerender();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rerender);
+</script>
+</body>
+</html>
